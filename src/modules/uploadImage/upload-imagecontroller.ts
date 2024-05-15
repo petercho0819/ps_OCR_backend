@@ -4,8 +4,10 @@ import {
   Get,
   Logger,
   Param,
+  Post,
   Put,
   Request,
+  UploadedFile,
   UseGuards,
 } from '@nestjs/common';
 import { UploadImageService } from './upload-image.service';
@@ -16,9 +18,16 @@ export class UploadImageController {
   private readonly logger = new Logger(UploadImageController.name);
   constructor(private readonly uploadImageService: UploadImageService) {}
 
-  @Get()
-  async uploadImage(@Body() body) {
-    const { image } = body;
-    return await this.uploadImageService.uploadImage(image);
+  @Post('file')
+  async uploadImage(
+    @Body() uploadOCRDto,
+    @UploadedFile() { originalname, buffer, mimetype }: Express.Multer.File,
+  ) {
+    const { image } = uploadOCRDto;
+    return await this.uploadImageService.uploadImage(uploadOCRDto, {
+      OCRName: Buffer.from(originalname || '', 'latin1').toString('utf8') || '',
+      OCRBuffer: buffer || Buffer.from(''),
+      OCRMimetype: mimetype || '',
+    });
   }
 }

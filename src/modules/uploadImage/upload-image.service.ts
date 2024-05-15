@@ -7,7 +7,7 @@ export class UploadImageService {
 
   constructor(private readonly uploadImageRepository: UploadImageRepository) {}
 
-  async uploadImage(image: any) {
-    await this.uploadImageRepository.uploadImage();
+  async uploadImage(uploadOCRDto, { OCRName, OCRBuffer, OCRMimetype }) {
+    throw new Error('Method not implemented.');
   }
 }
