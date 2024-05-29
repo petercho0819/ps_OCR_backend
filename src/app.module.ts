@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DataAccessModule } from './modules/database/repository.module';
 import { UploadImageModule } from './modules/uploadImage/upload-image.module';
 import { MONGOOSE_FOR_FEATURE } from './modules/database/constant';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -14,7 +15,9 @@ import { MONGOOSE_FOR_FEATURE } from './modules/database/constant';
     MongooseModule.forFeature(MONGOOSE_FOR_FEATURE),
 
     DataAccessModule,
+    UploadImageModule,
+    HttpModule,
   ],
-  providers: [UploadImageModule],
+  providers: [],
 })
 export class AppModule {}
