@@ -1,3 +1,4 @@
+import { ReceiptType } from 'aws-sdk/clients/ssmcontacts';
 import {
   IsOptional,
   IsString,
@@ -6,8 +7,7 @@ import {
   Min,
   IsIn,
 } from 'class-validator';
-import { INVALID_RECEIPT_TYPE, receiptType } from 'src/modules/common/constant';
-import { ReceiptType } from 'src/modules/common/interface';
+import { receiptType, INVALID_RECEIPT_TYPE } from 'src/common/constant';
 
 export class UploadOCRDTO {
   @IsNotEmpty()

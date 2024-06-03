@@ -3,6 +3,7 @@ import UploadImageRepository from '../database/repository/upload-image.repositor
 import { UploadOCRDTO } from './dto/UploadOCRDTO.dto';
 import { HttpService } from '@nestjs/axios';
 import { NaverOcrDTO } from './interface';
+import { AmazonService } from 'src/amazon/amazon.service';
 @Injectable()
 export class UploadImageService {
   private readonly logger = new Logger(UploadImageService.name);
@@ -10,6 +11,7 @@ export class UploadImageService {
   constructor(
     private readonly uploadImageRepository: UploadImageRepository,
     private readonly httpService: HttpService,
+    private readonly amazonService: AmazonService,
   ) {}
 
   async uploadImage(
@@ -19,6 +21,16 @@ export class UploadImageService {
     this.logger.verbose(`${UploadImageService.name} - uploadImage`);
 
     // file 절대경로로 업데이트
+    let imgPath;
+    if (OCRName) {
+      await this.amazonService.uploadFile(
+        OCRName,
+        OCRBuffer,
+        OCRMimetype,
+        'ocrImage',
+      );
+      imgPath = `${process.env.AMAZON_BASE}/${process.env.AMAZON_BUCKET}/ocrImage/${OCRName}`;
+    }
 
     //   const naverOcrDto: NaverOcrDTO = {
     //     images: [

@@ -13,8 +13,8 @@ import {
 } from '@nestjs/common';
 import { UploadImageService } from './upload-image.service';
 import { UploadOCRDTO } from './dto/UploadOCRDTO.dto';
-import { UPLOAD_IMAGE } from '../common/end-point/upload-image';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UPLOAD_IMAGE } from 'src/common/constant';
 
 // @UseGuards(JwtAuthGuard)
 @Controller(UPLOAD_IMAGE)
@@ -28,8 +28,8 @@ export class UploadImageController {
     @Body() uploadOCRDto: UploadOCRDTO,
     @UploadedFile() { originalname, buffer, mimetype }: Express.Multer.File,
   ) {
-    const { receiptDate, numberOfPeople, receiptType, price, memo } =
-      uploadOCRDto;
+    this.logger.verbose(`${UploadImageController.name} - uploadImage`);
+    this.logger.log(`uploadOCRDto - ${JSON.stringify(uploadOCRDto)}`);
     return await this.uploadImageService.uploadImage(uploadOCRDto, {
       OCRName: Buffer.from(originalname || '', 'latin1').toString('utf8') || '',
       OCRBuffer: buffer || Buffer.from(''),
