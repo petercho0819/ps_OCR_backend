@@ -5,25 +5,28 @@ export class UploadImage {
   _id: string;
 
   @Prop()
-  nscCode: string;
-
-  @Prop()
-  img: string;
-
-  @Prop()
-  isActive: boolean;
-
-  @Prop()
-  categoryCode: string;
-
-  @Prop()
-  modelCode: string;
+  userCode: string;
 
   @Prop()
   name: string;
 
   @Prop()
-  brochure: string;
+  imgPath: string;
+
+  @Prop()
+  receiptDate: string;
+
+  @Prop()
+  receiptType: string;
+
+  @Prop()
+  price: number;
+
+  @Prop()
+  memo: string;
+
+  @Prop()
+  numberOfPeople: number;
 
   createdAt: Date;
 

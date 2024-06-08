@@ -34,7 +34,7 @@ export class AmazonService {
     const object_upload_params = new PutObjectCommand({
       Bucket: this.bucket,
       ContentType: type,
-      ACL: ObjectCannedACL.public_read,
+      ACL: 'public-read', // 파일을 퍼블릭으로 설정
       Key: `${key}/${fileName}`,
       Body: file,
     });

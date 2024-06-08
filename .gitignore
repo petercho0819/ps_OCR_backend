@@ -1,8 +1,9 @@
 # compiled output
 /dist
 /node_modules
-.env/*
+.env.*
 ecosystem.dev.config.js
+.dev.config.js
 
 # Logs
 logs

@@ -4,6 +4,8 @@ import { UploadOCRDTO } from './dto/UploadOCRDTO.dto';
 import { HttpService } from '@nestjs/axios';
 import { NaverOcrDTO } from './interface';
 import { AmazonService } from 'src/amazon/amazon.service';
+import * as moment from 'moment';
+
 @Injectable()
 export class UploadImageService {
   private readonly logger = new Logger(UploadImageService.name);
@@ -21,6 +23,7 @@ export class UploadImageService {
     this.logger.verbose(`${UploadImageService.name} - uploadImage`);
 
     // file 절대경로로 업데이트
+    // 1. aws에 업로드
     let imgPath;
     if (OCRName) {
       await this.amazonService.uploadFile(
@@ -29,33 +32,47 @@ export class UploadImageService {
         OCRMimetype,
         'ocrImage',
       );
-      imgPath = `${process.env.AMAZON_BASE}/${process.env.AMAZON_BUCKET}/ocrImage/${OCRName}`;
+      const encodedFileName = encodeURIComponent(OCRName);
+      imgPath = `${process.env.AMAZON_BUCKET_BASE}/ocrImage/${encodedFileName}`;
     }
-
-    //   const naverOcrDto: NaverOcrDTO = {
-    //     images: [
-    //       {
-    //         format: 'jpeg',
-    //         name: 'demo',
-    //         date: null,
-    //         url: '',
-    //       },
-    //     ],
-    //     requestId: 'string',
-    //     resultType: 'string',
-    //     version: 'V1',
-    //     timestamp: 1584062336793,
-    //   };
-    //   // naver api로 분석하기
-    //   await this.httpService.axiosRef.post(
-    //     process.env.NAVER_OCR_URL,
-    //     naverOcrDto,
-    //     {
-    //       headers: {
-    //         'X-OCR-SECRET': process.env.X_OCR_SECRET,
-    //         ' Content-Type': 'application/json',
-    //       },
-    //     },
-    //   );
+    // 2. db에 저장
+    const result = await this.uploadImageRepository.createUploadImage({
+      ...uploadOCRDto,
+      numberOfPeople: Number(uploadOCRDto.numberOfPeople),
+      price: Number(uploadOCRDto.price),
+      userCode: 'userCode1',
+      imgPath,
+    });
+    const naverOcrDto: NaverOcrDTO = {
+      images: [
+        {
+          format: OCRMimetype.split('/')[1],
+          name: OCRName,
+          date: null,
+          url: result.imgPath,
+        },
+      ],
+      requestId: 'string',
+      resultType: 'string',
+      version: 'V1',
+      timestamp: moment().unix(),
+    };
+    // naver api로 분석하기
+    try {
+      const result2 = await this.httpService.axiosRef.post(
+        process.env.NAVER_OCR_URL,
+        naverOcrDto,
+        {
+          headers: {
+            'X-OCR-SECRET': process.env.X_OCR_SECRET,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('🚀 ~ UploadImageService ~ result2:', result2.data);
+      return result2.data;
+    } catch (e) {
+      console.log('🚀 ~ UploadImageService ~ e:', e);
+    }
   }
 }

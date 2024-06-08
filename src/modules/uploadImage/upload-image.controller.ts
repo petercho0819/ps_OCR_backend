@@ -31,7 +31,7 @@ export class UploadImageController {
     this.logger.verbose(`${UploadImageController.name} - uploadImage`);
     this.logger.log(`uploadOCRDto - ${JSON.stringify(uploadOCRDto)}`);
     return await this.uploadImageService.uploadImage(uploadOCRDto, {
-      OCRName: Buffer.from(originalname || '', 'latin1').toString('utf8') || '',
+      OCRName: originalname || '',
       OCRBuffer: buffer || Buffer.from(''),
       OCRMimetype: mimetype || '',
     });

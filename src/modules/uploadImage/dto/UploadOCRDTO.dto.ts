@@ -14,6 +14,10 @@ export class UploadOCRDTO {
   @IsString()
   receiptDate: string;
 
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
   @IsOptional()
   @IsNumber()
   @Min(1)
@@ -31,4 +35,14 @@ export class UploadOCRDTO {
   @IsString()
   @IsOptional()
   memo: string;
+}
+
+export class UploadOCRSVCDTO extends UploadOCRDTO {
+  @IsNotEmpty()
+  @IsString()
+  userCode: string;
+
+  @IsNotEmpty()
+  @IsString()
+  imgPath: string;
 }
