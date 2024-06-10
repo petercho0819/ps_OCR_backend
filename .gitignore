@@ -4,6 +4,7 @@
 .env.*
 ecosystem.dev.config.js
 .dev.config.js
+receipt-uploads/*
 
 # Logs
 logs

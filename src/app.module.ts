@@ -6,9 +6,13 @@ import { MONGOOSE_FOR_FEATURE } from './modules/database/constant';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { AmazonModule } from './amazon/amazon.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
+    MulterModule.register({
+      dest: '../../../uploads', // 파일 업로드 디렉토리 설정
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${
